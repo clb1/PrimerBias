@@ -1,0 +1,63 @@
+============ Universal primers ===============
+>UDTD5
+ACACTCTTTCCCTACACGACGCTCTTCCGATCT
+P5_1            CGACGCTCTTCCGAT
+
+>UDTD7
+GTGACTGGAGTTCAGACGTGTGCTCTTCCGATC
+P7_1             GTGTGCTCTTCCGAT
+
+==============================================
+
+0)  To get dsDNA template for all experiments, perform PCR with input ssDNA template using primers DNAP_P5_biotin & DNAP_P7_biotin. Do PCR cleanup with Ampure Beads. Aliquot for 1a-c).
+1a) To get background, do 1 cycle of PCR with DNAP_P5_univ & DNAP_P7_univ. 
+1b&1c) To get bias, do 1 cycle of PCR with both combinations of <one of the opposite sequences><Ns>+other background primer. (ie two PCR experiments)
+2) Remove dsDNA template with streptavidin(?) beads or digestion. Do PCR cleanup with Ampure beads. Which should be done first, ssDNA digestion followed by PCR cleanup?
+3) 10-15 cycles of PCR with DNAP_P5_univ & DNAP_P7_univ
+4) PCR on Illumina sequencing adapters
+
+Sequencing Product                 >
+DNAP_P5_biotin  b-CGACGCTCTTCCGATCTC
+DNAP_P5_univ      CGACGCTCTTCCGATCTCCGAG
+DNAP_P5_random                GATCTCCGAGTTGCNNNNNNN
+ssDNA template 5'-CGACGCTCTTCCGATCTCCGAGTTGCNNNNNNNNNN<filler>NNNNNNNNNNAGTTGAGCGGATCGGAAGAGCACAC-3'
+               3'-GCTGCGAGAAGGCTAGAGGCTCAACGNNNNNNNNNN<filler>NNNNNNNNNNTCAACTCGCCTAGCCTTCTCGTGTG-5'
+                 						 NNNNNNNTCAACTCGCCTAGC                 DNAP_P7_random
+                     					                    CTCGCCTAGCCTTCTCGTGTG      DNAP_P7_univ
+									        CCTAGCCTTCTCGTGTG-b    DNAP_P7_biotin
+									        <                      Sequencing Product
+
+filler:             GTGAATTATTAAGACTGAGGCAT GGAGTACGAATTATTAAGTG CTATGGAATTATTAAGACTGAGG
+Sequencing Product: CCGAGTTGCNNNNNNNNNN GTGAATTATTAAGACTGAGGCAT GGAGTACGAATTATTAAGTG CTATGGAATTATTAAGACTGAGG NNNNNNNNNNTCAACTCGC
+                    (NOTE: when PE 100bp mates are merged to yield the 104bp product)
+
+# For creating stock of biotinylated template dsDNA 
+>DNAP_P5_biotin, Tm=59.2C
+/5'-biotin/CGACGCTCTTCCGATCTC  
+>DNAP_P7_biotin, Tm=61.4C
+/5'-biotin/GTGTGCTCTTCCGATCC
+
+# CHECK: Are the runs of 4nt that are the same in both going to cause hairpins for the same NNNNNNNN?
+# For measuring DNA Pol bias
+>DNAP_P5_random, Tm=60-70C (for NNNNNNN = AAAAAAA,...,GGGGGGG)
+GATCTCCGAGTTGCNNNNNNN
+>DNAP_P7_random, Tm=59.5C-70.4C  (for NNNNNNN = AAAAAAA,...,GGGGGGG)
+CGATCCGCTCAACTNNNNNNN
+             ^not the complement of same position in P5
+
+# For measuring background distribution of NNNNNNN sequences in sample, and for universal PCR step.
+>DNAP_P5_univ, Tm=67.2C
+CGACGCTCTTCCGATCTCCGAG
+>DNAP_P7_univ, Tm=66.6C
+GTGTGCTCTTCCGATCCGCTC
+
+Experiments, using stock of biotinylated template dsDNA
+-------------------------------------------------------
+Experiment 1: DNAP_P5_bckgrnd & DNAP_P7_bckgrnd
+Experiment 2: DNAP_P5_random & DNAP_P7_univ
+Experiment 3: DNAP_P7_random & DNAP_P5_univ
+
+
+NOTES
+-----
+When ordering, use "hand mix" for sequences with N's to make sure there is a uniform distribution of A,C,G,T.

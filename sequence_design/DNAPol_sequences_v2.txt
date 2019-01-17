@@ -1,0 +1,95 @@
+Primer Sequences
+----------------
+bkgrnd_P5 = CGACGCTCTTCCGATCTGGTTTGTCTACGAGGAGG
+bkgrnd_P7 = GTGTGCTCTTCCGATCCCCCGTCAAGTAGGAGG
+
+Common_P5 = CGACGCTCTTCCGATCTCCGAGGTCCGATGTCCTGCCTTGCTTTTGGTC
+Common_P7 = GTGTGCTCTTCCGATCCGCTCGTCCGATGTCCTGCCTTGCTTTTGGTC
+
+Random_P5 = GATCTCCGAGTTGCNNNNNNN
+Random_P7 = CGATCCGCTCAACTNNNNNNN
+
+Univ_P5+  = CGACGCTCTTCCGATCTCCGAG
+Univ_P7+  = GTGTGCTCTTCCGATCCGCTC
+
+
+Primer Tm's
+-----------
+Random_P5 = 60-70C (for NNNNNNN = AAAAAAA,...,GGGGGGG)
+Random_P7 = 60-70C  (for NNNNNNN = AAAAAAA,...,GGGGGGG)
+
+Common_P5 = 61C (for the initial hybridization region)
+Common_P7 = 61C (for the initial hybridization region)
+
+bkgrnd_P5 = 58C (for the initial hybridization region)
+bkgrnd_P7 = 60C (for the initial hybridization region)
+
+Univ_P5+  = 35C (partial)
+ 	  = 67C (full)
+Univ_P7+  = 42C (partial)
+	  = 67C (full)
+
+
+============ Universal primers ===============
+>UDTD5
+ACACTCTTTCCCTACACGACGCTCTTCCGATCT
+P5_1            CGACGCTCTTCCGAT
+
+>UDTD7
+GTGACTGGAGTTCAGACGTGTGCTCTTCCGATC
+P7_1             GTGTGCTCTTCCGAT
+
+
+1a) To get background, do 1 cycle of PCR with DNAP_P5_univ & DNAP_P7_univ. 
+1b&1c) To get bias, do 1 cycle of PCR with both combinations of <one of the opposite sequences><Ns>+other background primer. (ie two PCR experiments)
+2) Remove dsDNA template with streptavidin(?) beads or digestion. Do PCR cleanup with Ampure beads. Which should be done first, ssDNA digestion followed by PCR cleanup?
+3) 10-15 cycles of PCR with DNAP_P5_univ & DNAP_P7_univ
+4) PCR on Illumina sequencing adapters
+
+
+
+#### DNAPol Experiment 1 ###
+
+Template and Primers
+--------------------
+Common_P7  5'-GTGTGCTCTTCCGATCCGCTCGTCCGATGTCCTGCCTTGCTTTTGGTC                               NNNNNNNCGTTGAGCCTCTAG-5'                Random_P5
+template_1                               5'-CCTGCCTTGCTTTTGGTCCGGGTCTNNNNNNNNTGTAATCCTGGAGNNNNNNNNNNGCAACTCGGAGATCCCTCCTCGTAGACAAACC-3'
+                                                                                                                  GGAGGAGCATCTGTTTGGTCTAGCCTTCTCGCAGC-5'  bkgrnd_P5  
+                                                                                                        GAGCCTCTAGCCTTCTCGCAGC-5'    Univ_P5+
+DNAPol Experiment 1.Back
+------------------------
+"Background" product after PCR with bkgrnd_P5 & Common_P7 primers is 135bp:
+	     5'-GTGTGCTCTTCCGATCCGCTCGTCCGATGTCCTGCCTTGCTTTTGGTCCGGGTCTNNNNNNNNTGTAATCCTGGAGNNNNNNNNNNGCAACTCGGAGATCCCTCCTCGTAGACAAACCAGATCGGAAGAGCGTCG-3'
+	     3'-CACACGAGAAGGCTAGGCGAGCAGGCTACAGGACGGAACGAAAACCAGGCCCAGANNNNNNNNACATTAGGACCTCNNNNNNNNNNCGTTGAGCCTCTAGGGAGGAGCATCTGTTTGGTCTAGCCTTCTCGCAGC-5'
+
+
+DNAPol Experiment 1.Bias
+------------------------
+"Bias" product after 1 cycle of PCR with Random_P5 & Common_P7 primers is 100bp:
+	     5'-GTGTGCTCTTCCGATCCGCTCGTCCGATGTCCTGCCTTGCTTTTGGTCCGGGTCTNNNNNNNNTGTAATCCTGGAGNNNNNNNNNNGCAACTCGGAGATC-3'
+	     3'-CACACGAGAAGGCTAGGCGAGCAGGCTACAGGACGGAACGAAAACCAGGCCCAGANNNNNNNNACATTAGGACCTCNNNNNNNNNNCGTTGAGCCTCTAG-5'
+
+
+#### DNAPol Experiment 2 ###
+
+Template and Primers
+--------------------
+
+Common_P5  5'-CGACGCTCTTCCGATCTCCGAGGTCCGATGTCCTGCCTTGCTTTTGGTC                                  NNNNNNNTCAACTCGCCTAGC-5'             Random_P7
+RT_template_2                             5'-CCTGCCTTGCTTTTGGTCCGGGTCTNNNNNNNNTGTAATCCTGGAGNNNNNNNNNNNNNAGTTGAGCGGATCGCCTCCTACTTGACGGGG-3'
+  				  							                              GGAGGATGAACTGCCCCCTAGCCTTCTCGTGTG-5'  bkgrnd_P7
+                                                                                                            CTCGCCTAGCCTTCTCGTGTG-5'  Univ_P7+
+DNAPol_Experiment_2.Back
+-----------------
+	"Background" product after PCR with bkgrnd_P7 & Common_P5 primers is 137bp:
+	5'-CGACGCTCTTCCGATCTCCGAGGTCCGATGTCCTGCCTTGCTTTTGGTCCGGGTCTNNNNNNNNTGTAATCCTGGAGNNNNNNNNNNNNNAGTTGAGCGGATCGCCTCCTACTTGACGGGGGATCGGAAGAGCACAC-3'
+	3'-GCTGCGAGAAGGCTAGAGGCTCCAGGCTACAGGACGGAACGAAAACCAGGCCCAGANNNNNNNNACATTAGGACCTCNNNNNNNNNNNNNTCAACTCGCCTAGCGGAGGATGAACTGCCCCCTAGCCTTCTCGTGTG-5'
+
+
+DNAPol Experiment 2.Bias
+-----------------
+	"Bias" product after 1 cycle of PCR with Random_P7 & Common_P5 primers is 104bp:
+	5'-CGACGCTCTTCCGATCTCCGAGGTCCGATGTCCTGCCTTGCTTTTGGTCCGGGTCTNNNNNNNNTGTAATCCTGGAGNNNNNNNNNNNNNAGTTGAGCGGATCG-3'
+	3'-GCTGCGAGAAGGCTAGAGGCTCCAGGCTACAGGACGGAACGAAAACCAGGCCCAGANNNNNNNNACATTAGGACCTCNNNNNNNNNNNNNTCAACTCGCCTAGC-5'
+
+

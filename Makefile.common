@@ -1,0 +1,111 @@
+SHELL = /bin/bash
+
+PRIMER_BIAS_DIR = /raid1/projects/PrimerBias
+ROOT_DIR = ${PRIMER_BIAS_DIR}
+SCRIPTS = ${PRIMER_BIAS_DIR}/scripts
+TEMP_DIR = /raid1/projects/scratch
+
+TEMPLATES_FASTA = ${ROOT_DIR}/library_sequences/templates.fa
+
+
+BWA = bwa
+BWA_PRIMERS_PARAMS = mem -t 8 -D 0.01 -Y -k 4 -A 1 -B 2 -T 17 -L 0,0 -O 1,1 -a -v 2
+#BWA_TARGETS_PARAMS = mem -t 8 -B 2 -D 0.01 -v 2 -k 4 -T 40 -L 0,0 -O 1,1 # -Y -A 2 -B 1 -T 27 -a 
+BWA_PRIMER_INDEX_ROOT_DIR = ${ROOT_DIR}/bwa_indexes
+
+SEQUENCING_RUNS_ROOT_DIR = /raid1/raw_data/SequencingRuns
+
+
+.SECONDARY:
+.PHONY: populate_library_dirs setup_library_dirs
+
+
+default:
+    @echo "No default actions"
+
+
+populate_library_dirs: samples_list.txt
+    ${SEQUENCING_RUNS_ROOT_DIR}/scripts/populateLibraryDirs.py ${SEQUENCING_RUNS_ROOT_DIR} ${SEQUENCING_RUNS} $<
+
+
+setup_library_dirs: library_details.tsv
+    tail -n +2 $< | egrep -v "^#" | while IFS=$$'\t' read lib_name lib_abbrev primers_files; do \
+        echo "### $${lib_name} ###" ; \
+        cd ${ROOT_DIR}/${SUBDIR_NAME}/$${lib_name}; \
+        r1=`ls *_R1_*.fastq.gz` ; \
+        r2=`ls *_R2_*.fastq.gz` ; \
+        echo "SHELL = /bin/bash" > Makefile ; \
+        echo "TEMPLATE_NAME = $${lib_abbrev}" >> Makefile ; \
+        echo "R1_FASTQ = $${r1}" >> Makefile ; \
+        echo "R2_FASTQ = $${r2}" >> Makefile ; \
+        echo "include ${ROOT_DIR}/Makefile.common" >> Makefile; \
+        mkdir bwa_indexes ; \
+        cat $${primers_files} > bwa_indexes/primers.fa ; \
+        bwa index bwa_indexes/primers.fa ; \
+        cd ${ROOT_DIR}; \
+    done
+
+
+# TODO: Changed the "standardize..." naming. It doesn't fit.
+standardized_read_to_target_matches.tsv.gz: bwa_indexes/primers.fa ${R1_FASTQ} ${R2_FASTQ}
+    -rm merged_fastq.pipe
+    mkfifo merged_fastq.pipe
+
+    paste \
+    <(zcat ${R1_FASTQ} | awk '0==(NR+3)%4{ORS=" "; split($$0,a," "); print a[1]}0==(NR+2)%4{print}0==NR%4{ORS="\n";print}') \
+    <(zcat ${R2_FASTQ} | awk '0==(NR+3)%4{ORS=" "; split($$0,a," "); print a[1]}0==(NR+2)%4{print}0==NR%4{ORS="\n";print}') | \
+    awk '{printf "%s_1\n%s\n+\n%s\n%s_2\n%s\n+\n%s\n",$$1,$$2,$$3,$$4,$$5,$$6}' > merged_fastq.pipe &
+
+    # These two lines are temporary for debugging:
+    ${BWA} ${BWA_PRIMERS_PARAMS} bwa_indexes/primers.fa merged_fastq.pipe > bwa_debug.sam
+    ${SCRIPTS}/extractDegenerateSequencesFromReadPairs.py ${TEMPLATE_NAME} $< ${TEMPLATES_FASTA} bwa_debug.sam $@ standardize_reads.aux.gz standardize_reads.log
+
+    #${SCRIPTS}/extractDegenerateSequencesFromReadPairs.py ${TEMPLATE_NAME} $< ${TEMPLATES_FASTA} \
+    #<(${BWA} ${BWA_PRIMERS_PARAMS} $< merged_fastq.pipe) $@ standardize_reads.aux.gz standardize_reads.log
+
+    rm merged_fastq.pipe
+
+unique_occurrences.hist duplication_rate.hist: standardized_read_to_target_matches.tsv.gz
+    ${SCRIPTS}/histPrimerOccurrencesAndDuplications.py $< 6 unique_occurrences.hist duplication_rate.hist
+
+
+## BRT1 ##
+BRT1_primer_diff.hist: BRT1A_bias_S30/standardized_read_to_target_matches.tsv.gz BRT1B_bias_S31/standardized_read_to_target_matches.tsv.gz
+    ${SCRIPTS}/histDifferentialPrimerOccurrences.py $^ 6 $@
+
+BRT1_primer_relative_efficiency_scores.txt: BRT1A_bias_S30/standardized_read_to_target_matches.tsv.gz BRT1B_bias_S31/standardized_read_to_target_matches.tsv.gz
+    ${SCRIPTS}/computePrimerRelativeEfficiencyScores.py $^ 6 $@
+
+
+## BRT2 ##
+BRT2_primer_diff.hist: BRT2A_bias_S32/standardized_read_to_target_matches.tsv.gz BRT2B_bias_S33/standardized_read_to_target_matches.tsv.gz
+    ${SCRIPTS}/histDifferentialPrimerOccurrences.py $^ 6 $@
+
+BRT2_primer_relative_efficiency_scores.txt: BRT2A_bias_S32/standardized_read_to_target_matches.tsv.gz BRT2B_bias_S33/standardized_read_to_target_matches.tsv.gz
+    ${SCRIPTS}/computePrimerRelativeEfficiencyScores.py $^ 6 $@
+
+
+## DP1 ##
+DP1_primer_diff.hist: DP1A_bias_S34/standardized_read_to_target_matches.tsv.gz DP1B_bias_S35/standardized_read_to_target_matches.tsv.gz
+    ${SCRIPTS}/histDifferentialPrimerOccurrences.py $^ 6 $@
+
+DP1_primer_relative_efficiency_scores.txt: DP1A_bias_S34/standardized_read_to_target_matches.tsv.gz DP1B_bias_S35/standardized_read_to_target_matches.tsv.gz
+    ${SCRIPTS}/computePrimerRelativeEfficiencyScores.py $^ 6 $@
+
+
+## DP2 ##
+DP2_primer_diff.hist: DP2A_bias_S36/standardized_read_to_target_matches.tsv.gz DP2B_bias_S37/standardized_read_to_target_matches.tsv.gz
+    ${SCRIPTS}/histDifferentialPrimerOccurrences.py $^ 6 $@
+
+DP2_primer_relative_efficiency_scores.txt: DP2A_bias_S36/standardized_read_to_target_matches.tsv.gz DP2B_bias_S37/standardized_read_to_target_matches.tsv.gz
+    ${SCRIPTS}/computePrimerRelativeEfficiencyScores.py $^ 6 $@
+
+
+%_replicate_scores.png: %1_primer_relative_efficiency_scores.txt %2_primer_relative_efficiency_scores.txt
+    ${SCRIPTS}/plotReplicates.py score $^ $@
+
+%_replicate_fold_changes.png: %1_primer_relative_efficiency_scores.txt %2_primer_relative_efficiency_scores.txt
+    ${SCRIPTS}/plotReplicates.py fold_change $^ $@
+
+%_replicate_scores.tsv: %1_primer_relative_efficiency_scores.txt %2_primer_relative_efficiency_scores.txt
+    ${SCRIPTS}/combineReplicateScores.py $^ $@

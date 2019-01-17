@@ -1,0 +1,93 @@
+============ Universal primers ===============
+>UDTD5
+ACACTCTTTCCCTACACGACGCTCTTCCGATCT
+P5              CGACGCTCTTCCGAT
+
+
+>UDTD7
+GTGACTGGAGTTCAGACGTGTGCTCTTCCGATC
+P7               GTGTGCTCTTCCGAT
+==============================================
+
+* = RNA base
+
+Assumptions:
+------------
+For "Background" experiments, DNAPol and use RNA bases as template.
+
+########################
+#### RT Experiment 1 ###
+########################
+                                                                                                        
+Primer Sequences
+----------------
+Random_P5 = GATCTCCGAGTTGCNNNNNNN
+Common_P7 = GTGTGCTCTTCCGATCCGCTCGTCCGATGTCCTGCCTTGCTTTTGGTC
+Exp1_P5   = CGACGCTCTTCCGATCTCCGAG
+
+Primer Tm's
+-----------
+Common_P7 =  60C
+Random_P5 =  60-70C (for NNNNNNN = AAAAAAA,...,GGGGGGG)
+Exp1_P5   =  30C (for hybridization overlap)
+             62C (for complete hybridization)
+
+
+Template and Primers
+--------------------             
+Common_P7     5'-GTGTGCTCTTCCGATCCGCTCGTCCGATGTCCTGCCTTGCTTTTGGTC                               NNNNNNNCGTTGAGCCTCTAG-5'                Random_P5
+RT_template_1                               5'-CCTGCCTTGCTTTTGGTCCGGGTCTNNNNNTGTAATCCTGGAGNNNNNNNNNNNNNGCAACTCGGAGATC-3'
+                                                                                          *************    GAGCCTCTAGCCTTCTCGCAGC-5'    Exp1_P5
+
+RT Experiment 1.Back
+-----------------
+"Background" product after PCR with Exp1_P5 & Common_P7 primers is 112bp:
+    5'-GTGTGCTCTTCCGATCGGCTCGTCCGATGTCCTGCCTTGCTTTTGGTCCGGGTCTNNNNNTGTAATCCTGGAGNNNNNNNNNNNNNGCAACTCGGAGATCGGAAGAGCGTCG-3'
+    3'-CACACGAGAAGGCTAGCCGAGCAGGCTACAGGACGGAACGAAAACCAGGCCCAGANNNNNACATTAGGACCTCNNNNNNNNNNNNNCGTTGAGCCTCTAGCCTTCTCGCAGC-5'
+
+
+RT Experiment 1.Bias
+-----------------
+"Bias" product after "Qiagen 1-Step" step of RT-qSeq with Random_P5 & Common_P7 primers is 100bp:
+
+    5'-GTGTGCTCTTCCGATCGGCTCGTCCGATGTCCTGCCTTGCTTTTGGTCCGGGTCTNNNNNTGTAATCCTGGAGNNNNNNNNNNNNNGCAACTCGGAGATC-3'
+    3'-CACACGAGAAGGCTAGCCGAGCAGGCTACAGGACGGAACGAAAACCAGGCCCAGANNNNNACATTAGGACCTCNNNNNNNNNNNNNCGTTGAGCCTCTAG-5'
+
+
+
+########################
+#### RT Experiment 2 ###
+########################
+
+Primer Sequences
+----------------
+Random_P7 =  CGATCCGCTCAACTNNNNNNN
+Common_P5 =  CGACGCTCTTCCGATCTCCGAGGTCCGATGTCCTGCCTTGCTTTTGGTC
+Exp2_P7   =  GTGTGCTCTTCCGATCCGCTC
+
+Primer Tm's
+-----------
+Common_P5 = 60C
+Random_P7 = 59.5C-70.4C  (for NNNNNNN = AAAAAAA,...,GGGGGGG)
+Exp2_P7   = 38C   (for partial hybridization)
+          = 60.5C (for complete hybridization)
+   
+
+Template and Primers
+--------------------
+Common_P5     5'-CGACGCTCTTCCGATCTCCGAGGTCCGATGTCCTGCCTTGCTTTTGGTC                               NNNNNNNTCAACTCGCCTAGC-5'             Random_P7
+RT_template_2                                5'-CCTGCCTTGCTTTTGGTCCGGGTCTNNNNNTGTAATCCTGGAGNNNNNNNNNNNNNAGTTGAGCGGATCG     
+                                                                                           *************    CTCGCCTAGCCTTCTCGTGTG-5'  Exp2_P7
+
+RT Experiment 2.Back
+-----------------
+"Background" product after PCR with Exp2_P7 & Common_P5 primers is 112bp:
+    5'-CGACGCTCTTCCGATCT CCGAGGTCCGATGT CCTGCCTTGCTTTTGGTCCGGGTCTNNNNNTGTAATCCTGGAGNNNNNNNNNNNNNAGTTGAGCGGATCGGAAGAGCACAC-3'
+    3'-GCTGCGAGAAGGCTAGA GGCTCCAGGCTACA GGACGGAACGAAAACCAGGCCCAGANNNNNACATTAGGACCTCNNNNNNNNNNNNNTCAACTCGCCTAGCCTTCTCGTGTG-5'
+
+RT Experiment 2.Bias
+-----------------
+"Bias" product after "Qiagen 1-Step" step of RT-qSeq with Random_P7 & Common_P5 primers is 101bp:
+    5'-CGACGCTCTTCCGATCTCCGAGGTCCGATGT CCTGCCTTGCTTTTGGTCCGGGTCTNNNNNTGTAATCCTGGAGNNNNNNNNNNNNNAGTTGAGCGGATCG-3'
+    3'-GCTGCGAGAAGGCTAGAGGCTCCAGGCTACA GGACGGAACGAAAACCAGGCCCAGANNNNNACATTAGGACCTCNNNNNNNNNNNNNTCAACTCGCCTAGC-5'
+

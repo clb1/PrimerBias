@@ -1,0 +1,128 @@
+TO RESOLVE: For the background PCR experiments, can DNAPol use RNA as a
+template? If not, make them RT-qSeq experiments. Or maybe just do that anyhow
+for simplicity.
+
+============ Universal primers ===============
+>UDTD5
+ACACTCTTTCCCTACACGACGCTCTTCCGATCT
+P5              CGACGCTCTTCCGAT
+
+
+>UDTD7
+GTGACTGGAGTTCAGACGTGTGCTCTTCCGATC
+P7               GTGTGCTCTTCCGAT
+==============================================
+
+* = RNA base
+
+################################################################
+####  Experiment 1: RT-qSeq using DNAP_P5_random & distinct_w_P7    => ?bp product after Qiagen 1-step
+################################################################
+                                                       
+Bias experiment #1
+------------------
+					   		          V
+							Input into 1-step
+
+RT_bias_P7_1           5'-CTTCCGATCCGCTCNNNNNNNNCGTTAATGTATCGTCTTCTCTCC                                    NNNNNNNCGTTGAGCCTCTAG-5'          DNAP_P5_random
+RT_bias_template_1                           5'-CGTTAATGTATCGTCTTCTCTCCGCATGACTTCCGTGTCCGACTTTTTTTCTCNNNNNNNNNNNNNGCAACTCGGAGATCGGAA-3'
+                                                                      ?*******?                      *************
+
+					   		          V
+
+                                                      dsDNA product length = 102bp
+						     (Confirm w/ Florence: no ssDNA)
+
+
+                       5'-CTTCCGATCCGCTCNNNNNNNNCGTTAATGTATCGTCTTCTCTCCGCATGACTTCCGTGTCCGACTTTTTTTCTCNNNNNNNNNNNNNGCAACTCGGAGATC-3'
+                       3'-GAAGGCTAGGCGAGNNNNNNNNGCAATTACATAGCAGAAGAGAGGCGTACTGAAGGCACAGGCTGAAAAAAAGAGNNNNNNNNNNNNNCGTTGAGCCTCTAG-5'
+
+					   		          V
+   		 			         RNase then PCR cleanup after Qiagen 1-step
+                                                                  V
+						           "Universal" PCR
+														      GAGCCTCTAGCCTTCTCGCAGC-5' DNAP_P5_univ
+                       5'-CTTCCGATCCGCTCNNNNNNNNCGTTAATGTATCGTCTTCTCTCCGCATGACTTCCGTGTCCGACTTTTTTTCTCNNNNNNNNNNNNNGCAACTCGGAGATC-3'
+                       3'-GAAGGCTAGGCGAGNNNNNNNNGCAATTACATAGCAGAAGAGAGGCGTACTGAAGGCACAGGCTGAAAAAAAGAGNNNNNNNNNNNNNCGTTGAGCCTCTAG-5'
+DNAP_P7_univ    5'-GTGTGCTCTTCCGATCCGCTC
+
+
+
+
+Background experiment #1
+------------------------
+					   		          V
+							Input into 1-step
+
+RT_bias_P7_1           5'-CTTCCGATCCGCTCNNNNNNNNCGTTAATGTATCGTCTTCTCTCC                                               GAGCCTCTAGCCTTCTCGCAGC-5' DNAP_P5_univ 
+RT_bias_template_1                           5'-CGTTAATGTATCGTCTTCTCTCCGCATGACTTCCGTGTCCGACTTTTTTTCTCNNNNNNNNNNNNNGCAACTCGGAGATCGGAA-3'
+                                                                       *******                       *************                       
+
+					   		          V
+                                                     dsDNA product length = 114bp
+                         
+                       5'-CTTCCGATCCGCTCNNNNNNNNCGTTAATGTATCGTCTTCTCTCCGCATGACTTCCGTGTCCGACTTTTTTTCTCNNNNNNNNNNNNNGCAACTCGGAGATCGGAAGAGCGTCG-3'
+                       3'-GAAGGCTAGGCGAGNNNNNNNNGCAATTACATAGCAGAAGAGAGGCGTACTGAAGGCACAGGCTGAAAAAAAGAGNNNNNNNNNNNNNCGTTGAGCCTCTAGCCTTCTCGCAGC-5'
+
+					   		          V
+  						     RNase then PCR cleanup after Qiagen 1-step
+                                                                  V
+							    "Universal" PCR
+                                                                                                                      GAGCCTCTAGCCTTCTCGCAGC-5' DNAP_P5_univ 
+                       5'-CTTCCGATCCGCTCNNNNNNNNCGTTAATGTATCGTCTTCTCTCCGCATGACTTCCGTGTCCGACTTTTTTTCTCNNNNNNNNNNNNNGCAACTCGGAGATCGGAAGAGCGTCG-3'
+ 		       3'-GAAGGCTAGGCGAGNNNNNNNNGCAATTACATAGCAGAAGAGAGGCGTACTGAAGGCACAGGCTGAAAAAAAGAGNNNNNNNNNNNNNCGTTGAGCCTCTAGCCTTCTCGCAGC-5'
+DNAP_P7_univ    5'-GTGTGCTCTTCCGATCCGCTC
+
+
+################################################################
+#### Experiment 2: RT-qSeq using DNAP_P7_random & distinct_w_P5    => ?bp product after Qiagen 1-step
+################################################################
+
+Bias experiment #2
+------------------
+					   		          V
+							Input into 1-step
+
+RT_bias_P5_2          5'-CTTCCGATCTCCGAGNNNNNNNNCGTTATAGTATCGTCTTCTCTCC                                    NNNNNNNTCAACTCGCCTAGC-5'           DNAP_P7_random
+RT_bias_template_2                           5'-CGTTATAGTATCGTCTTCTCTCCGCATGACTTCCGTGTCCGACTTTTTTTCTCNNNNNNNNNNNNNAGTTGAGCGGATCGGAAG-3'
+                                                                       *******                       *************                        
+					   		          V
+                                                      dsDNA product length = 103bp
+
+                      5'-CTTCCGATCTCCGAGNNNNNNNNCGTTATAGTATCGTCTTCTCTCCGCATGACTTCCGTGTCCGACTTTTTTTCTCNNNNNNNNNNNNNAGTTGAGCGGATCG-3'
+                      3'-GAAGGCTAGAGGCTCNNNNNNNNGCAATATCATAGCAGAAGAGAGGCGTACTGAAGGCACAGGCTGAAAAAAAGAGNNNNNNNNNNNNNTCAACTCGCCTAGC-5'
+
+					   		          V
+  						     RNase then PCR cleanup after Qiagen 1-step
+                                                                  V
+							    "Universal" PCR
+                                                                                                                      CTCGCCTAGCCTTCTCGTGTG-5'  DNAP_P7_univ
+                      5'-CTTCCGATCTCCGAGNNNNNNNNCGTTATAGTATCGTCTTCTCTCCGCATGACTTCCGTGTCCGACTTTTTTTCTCNNNNNNNNNNNNNAGTTGAGCGGATCG-3'
+                      3'-GAAGGCTAGAGGCTCNNNNNNNNGCAATATCATAGCAGAAGAGAGGCGTACTGAAGGCACAGGCTGAAAAAAAGAGNNNNNNNNNNNNNTCAACTCGCCTAGC-5'
+DNAP_P5_univ   5'-CGACGCTCTTCCGATCTCCGAG
+
+
+Background experiment #2
+------------------------
+					   		          V
+							Input into 1-step
+
+RT_bias_P5_2          5'-CTTCCGATCTCCGAGNNNNNNNNCGTTATAGTATCGTCTTCTCTCC                                               CTCGCCTAGCCTTCTCGTGTG-5'  DNAP_P7_univ 
+RT_bias_template_2                           5'-CGTTATAGTATCGTCTTCTCTCCGCATGACTTCCGTGTCCGACTTTTTTTCTCNNNNNNNNNNNNNAGTTGAGCGGATCGGAAG-3'
+                                                                       *******                       *************                        
+					   		          V
+                                                      dsDNA product length = 103bp
+
+                      5'-CTTCCGATCTCCGAGNNNNNNNNCGTTATAGTATCGTCTTCTCTCCGCATGACTTCCGTGTCCGACTTTTTTTCTCNNNNNNNNNNNNNAGTTGAGCGGATCGGAAGAGCACAC-3'
+                      3'-GAAGGCTAGAGGCTCNNNNNNNNGCAATATCATAGCAGAAGAGAGGCGTACTGAAGGCACAGGCTGAAAAAAAGAGNNNNNNNNNNNNNTCAACTCGCCTAGCCTTCTCGTGTG-5'
+
+					   		          V
+  						     RNase then PCR cleanup after Qiagen 1-step
+                                                                  V
+							    "Universal" PCR
+
+                                                                                                                      CTCGCCTAGCCTTCTCGTGTG-5'  DNAP_P7_univ 
+                      5'-CTTCCGATCTCCGAGNNNNNNNNCGTTATAGTATCGTCTTCTCTCCGCATGACTTCCGTGTCCGACTTTTTTTCTCNNNNNNNNNNNNNAGTTGAGCGGATCGGAAGAGCACAC-3'
+                      3'-GAAGGCTAGAGGCTCNNNNNNNNGCAATATCATAGCAGAAGAGAGGCGTACTGAAGGCACAGGCTGAAAAAAAGAGNNNNNNNNNNNNNTCAACTCGCCTAGCCTTCTCGTGTG-5'
+DNAP_P5_univ   5'-CGACGCTCTTCCGATCTCCGAG
+
